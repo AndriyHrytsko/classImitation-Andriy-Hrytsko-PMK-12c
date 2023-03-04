@@ -4,69 +4,35 @@
 
 using namespace std;
 
-// Базовий клас для опису товару
 class Product {
 protected:
-    string country_code; // код країни-виробника
-    double price; // ціна товару
+    string country_code;
+    double price;
 public:
-    // Конструктор з параметрами
-    Product(string country_code, double price) {
-        this->country_code = country_code;
-        this->price = price;
-    }
-
-    // Геттери для отримання даних про товар
-    string getCountryCode() const {
-        return country_code;
-    }
-
-    double getPrice() const {
-        return price;
-    }
+    Product(string code, double p) : country_code(code), price(p) {}
+    string get_country_code() { return country_code; }
+    double get_price() { return price; }
 };
 
-// Клас для опису іграшки, що наслідує клас товару
 class Toy : public Product {
 private:
-    string name; // назва іграшки
-    int min_age; // мінімальний вік для використання
-    int max_age; // максимальний вік для використання
+    string name;
+    int min_age;
+    int max_age;
 public:
-    // Конструктор з параметрами, що викликає конструктор базового класу
-    Toy(string country_code, double price, string name, int min_age, int max_age)
-        : Product(country_code, price) {
-        this->name = name;
-        this->min_age = min_age;
-        this->max_age = max_age;
-    }
-
-    // Геттери для отримання даних про іграшку
-    string getName() const {
-        return name;
-    }
-
-    int getMinAge() const {
-        return min_age;
-    }
-
-    int getMaxAge() const {
-        return max_age;
-    }
+    Toy(string code, double p, string n, int min_a, int max_a) : Product(code, p), name(n), min_age(min_a), max_age(max_a) {}
+    string get_name() { return name; }
+    int get_min_age() { return min_age; }
+    int get_max_age() { return max_age; }
 };
 
 int main() {
-    // Створення декількох іграшок
-    Toy toy1("US", 9.99, "Lego", 4, 12);
-    Toy toy2("CN", 4.99, "Rubik's Cube", 8, 99);
-    Toy toy3("JP", 14.99, "Tamagotchi", 6, 99);
-    Toy toy4("US", 19.99, "Barbie", 3, 8);
-    Toy toy5("CN", 24.99, "RC Car", 6, 14);
-
-    // Створення вектору з усіма іграшками
-    vector<Toy> toys = { toy1, toy2, toy3, toy4, toy5 };
-
-    // Запит користувача на введення вікового діапазону та цінових меж
+    // Example usage
+    vector<Toy> toys;
+    toys.push_back(Toy("US", 19.99, "Lego", 4, 10));
+    toys.push_back(Toy("CN", 9.99, "Barbie", 3, 8));
+    toys.push_back(Toy("JP", 29.99, "Nintendo Switch", 7, 16));
+    
     int min_age, max_age;
     double min_price, max_price;
     cout << "Enter minimum age: ";
@@ -75,5 +41,20 @@ int main() {
     cin >> max_age;
     cout << "Enter minimum price: ";
     cin >> min_price;
+    cout << "Enter maximum price: ";
+    cin >> max_price;
+    
+    cout << "Toys recommended for ages " << min_age << " to " << max_age << " and priced between $" << min_price << " and $" << max_price << ":" << endl;
+    
+    double total_price = 0;
+    for (Toy t : toys) {
+        if (t.get_min_age() <= max_age && t.get_max_age() >= min_age && t.get_price() >= min_price && t.get_price() <= max_price) {
+            total_price += t.get_price();
+            cout << t.get_name() << " (Country Code: " << t.get_country_code() << ", Price: $" << t.get_price() << ")" << endl;
+        }
+    }
+    
+    cout << "Total price of recommended toys: $" << total_price << endl;
+    
     return 0;
 }
